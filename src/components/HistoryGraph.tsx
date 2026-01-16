@@ -5,71 +5,66 @@ interface HistoryGraphProps {
 
 export function HistoryGraph({ dbHistory, historyLength }: HistoryGraphProps) {
   return (
-    <div className="relative h-32 bg-background/50 rounded-lg overflow-hidden border border-border/50">
+    <div className="relative h-24 overflow-hidden">
       <svg
         className="w-full h-full"
         preserveAspectRatio="none"
         viewBox={`0 0 ${historyLength} 120`}
       >
-        {/* Grid lines */}
-        <line
-          x1="0"
-          y1="30"
-          x2={historyLength}
-          y2="30"
-          stroke="currentColor"
-          strokeWidth="0.5"
-          className="text-border"
-        />
-        <line
-          x1="0"
-          y1="60"
-          x2={historyLength}
-          y2="60"
-          stroke="currentColor"
-          strokeWidth="0.5"
-          className="text-border"
-        />
-        <line
-          x1="0"
-          y1="90"
-          x2={historyLength}
-          y2="90"
-          stroke="currentColor"
-          strokeWidth="0.5"
-          className="text-border"
-        />
+        <defs>
+          <linearGradient id="historyGradient" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="rgba(34, 211, 238, 0.4)" />
+            <stop offset="100%" stopColor="transparent" />
+          </linearGradient>
+          <filter id="glow">
+            <feGaussianBlur stdDeviation="1.5" result="coloredBlur" />
+            <feMerge>
+              <feMergeNode in="coloredBlur" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+        </defs>
+
+        {/* Dynamic Grid lines */}
+        {[30, 60, 90].map((y) => (
+          <line
+            key={y}
+            x1="0"
+            y1={120 - y}
+            x2={historyLength}
+            y2={120 - y}
+            stroke="rgba(255,255,255,0.03)"
+            strokeWidth="1"
+          />
+        ))}
 
         {/* Area fill */}
         <path
           d={`M 0 120 ${dbHistory.map((db, i) => `L ${i} ${120 - db}`).join(" ")} L ${historyLength - 1} 120 Z`}
           fill="url(#historyGradient)"
-          opacity="0.3"
+          className="transition-all duration-300"
         />
 
-        {/* Line */}
+        {/* Main Line with Glow */}
         <path
           d={`M 0 ${120 - dbHistory[0]} ${dbHistory.map((db, i) => `L ${i} ${120 - db}`).join(" ")}`}
           fill="none"
-          stroke="rgb(34 211 238)"
-          strokeWidth="2"
+          stroke="rgb(34, 211, 238)"
+          strokeWidth="1.5"
           vectorEffect="non-scaling-stroke"
+          className="transition-all duration-300"
+          filter="url(#glow)"
         />
-
-        <defs>
-          <linearGradient id="historyGradient" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="rgb(34 211 238)" />
-            <stop offset="100%" stopColor="transparent" />
-          </linearGradient>
-        </defs>
       </svg>
 
-      {/* Labels */}
-      <div className="absolute right-2 top-1 text-[10px] text-muted-foreground">
-        90dB
-      </div>
-      <div className="absolute right-2 bottom-1 text-[10px] text-muted-foreground">
-        0dB
+      {/* Numerical Indicators */}
+      <div className="absolute inset-y-0 right-0 flex flex-col justify-between py-1 px-2 pointer-events-none">
+        <span className="text-[8px] font-bold text-slate-600 uppercase">
+          90dB
+        </span>
+        <span className="text-[8px] font-bold text-slate-600 uppercase">
+          0dB
+        </span>
       </div>
     </div>
   );
