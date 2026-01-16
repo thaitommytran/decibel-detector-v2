@@ -4,6 +4,7 @@ import { useState, useRef, useCallback, useEffect } from "react";
 import { FrequencyVisualizer } from "@/components/FrequencyVisualizer";
 import { MainMeter } from "@/components/MainMeter";
 import { SessionStats } from "@/components/SessionStats";
+import { MicOff } from "lucide-react";
 
 const NOISE_LEVELS = [
   {
@@ -249,20 +250,11 @@ export function DecibelMeter() {
 
   const displayPercent = Math.min(100, (decibels / 120) * 100);
 
-  const glowColors: Record<string, string> = {
-    cyan: "drop-shadow(0 0 20px rgb(34 211 238)) drop-shadow(0 0 40px rgb(34 211 238 / 0.5))",
-    yellow:
-      "drop-shadow(0 0 20px rgb(250 204 21)) drop-shadow(0 0 40px rgb(250 204 21 / 0.5))",
-    orange:
-      "drop-shadow(0 0 20px rgb(251 146 60)) drop-shadow(0 0 40px rgb(251 146 60 / 0.5))",
-    red: "drop-shadow(0 0 20px rgb(239 68 68)) drop-shadow(0 0 40px rgb(239 68 68 / 0.5))",
-  };
-
   return (
-    <div className="w-full max-w-6xl mx-auto px-4 py-8">
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <div className="w-full max-w-7xl mx-auto px-6">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
         {/* Left panel - Frequency Visualizer */}
-        <div className="lg:col-span-1 order-2 lg:order-1">
+        <div className="lg:col-span-3 order-2 lg:order-1 flex flex-col">
           <FrequencyVisualizer
             frequencyBars={frequencyBars}
             isListening={isListening}
@@ -272,21 +264,20 @@ export function DecibelMeter() {
         </div>
 
         {/* Center panel - Main meter */}
-        <div className="lg:col-span-1 order-1 lg:order-2">
+        <div className="lg:col-span-6 order-1 lg:order-2 flex flex-col justify-start">
           <MainMeter
             isListening={isListening}
             decibels={decibels}
             currentLevel={currentLevel}
             displayLevel={displayLevel}
             displayPercent={displayPercent}
-            glowColors={glowColors}
             onStart={startListening}
             onStop={stopListening}
           />
         </div>
 
         {/* Right panel - Stats */}
-        <div className="lg:col-span-1 order-3">
+        <div className="lg:col-span-3 order-3 flex flex-col">
           <SessionStats
             isListening={isListening}
             peakDecibels={peakDecibels}
@@ -301,8 +292,18 @@ export function DecibelMeter() {
 
       {/* Error Message */}
       {error && (
-        <div className="mt-6 p-4 bg-destructive/10 border border-destructive/30 rounded-xl text-destructive text-sm text-center max-w-md mx-auto">
-          {error}
+        <div className="mt-12 max-w-md mx-auto animate-in fade-in slide-in-from-bottom-4 duration-500">
+          <div className="glass-card bg-red-500/5 border-red-500/20 rounded-2xl p-4 flex items-center gap-4">
+            <div className="p-2 rounded-xl bg-red-500/10 border border-red-500/20">
+              <MicOff className="w-5 h-5 text-red-400" />
+            </div>
+            <div className="flex flex-col">
+              <span className="text-[10px] font-bold text-red-400 uppercase tracking-widest">
+                Access Error
+              </span>
+              <p className="text-sm text-red-200/80 leading-tight">{error}</p>
+            </div>
+          </div>
         </div>
       )}
     </div>
