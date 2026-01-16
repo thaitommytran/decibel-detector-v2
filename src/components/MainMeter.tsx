@@ -16,7 +16,6 @@ interface MainMeterProps {
   currentLevel: NoiseLevel;
   displayLevel: NoiseLevel;
   displayPercent: number;
-  glowColors: Record<string, string>;
   onStart: () => void;
   onStop: () => void;
 }
@@ -27,173 +26,162 @@ export function MainMeter({
   currentLevel,
   displayLevel,
   displayPercent,
-  glowColors,
   onStart,
   onStop,
 }: MainMeterProps) {
   return (
-    <div>
-      <div className="text-center mb-6">
-        <div className="inline-flex items-center gap-3 mb-3">
-          <div className="p-2 rounded-xl bg-primary/10 border border-primary/30">
-            <Volume2 className="w-6 h-6 text-primary" />
+    <div className="flex flex-col items-center">
+      {/* Title Section */}
+      <div className="text-center mb-10">
+        <div className="inline-flex items-center gap-3 mb-2 px-4 py-2 rounded-2xl glass-card">
+          <div className="p-1.5 rounded-lg bg-cyan-500/10 border border-cyan-500/20">
+            <Volume2 className="w-5 h-5 text-cyan-400" />
           </div>
-          <h1 className="text-4xl font-bold tracking-tight text-foreground">
+          <h1 className="text-2xl font-bold tracking-tight text-white uppercase">
             Decibel Detector
           </h1>
         </div>
-        <p className="text-muted-foreground text-sm tracking-wide">
-          Real-time audio analysis with scientific precision
+        <p className="text-slate-400 text-xs font-medium tracking-[0.2em] uppercase">
+          Real-time audio analysis
         </p>
       </div>
 
-      <div className="relative flex flex-col items-center">
-        {/* Outer glow ring */}
+      <div className="relative group">
+        {/* Animated Background Glow */}
         <div
-          className={`absolute w-72 h-72 rounded-full transition-all duration-500 ${isListening ? "opacity-100" : "opacity-0"}`}
+          className={`absolute inset-[-60px] rounded-full transition-all duration-1000 ${
+            isListening ? "opacity-30 scale-100" : "opacity-0 scale-90"
+          }`}
           style={{
-            background: `radial-gradient(circle, transparent 60%, ${
+            background: `radial-gradient(circle, ${
               currentLevel.glow === "cyan"
-                ? "rgb(34 211 238 / 0.1)"
+                ? "#22d3ee"
                 : currentLevel.glow === "yellow"
-                  ? "rgb(250 204 21 / 0.1)"
+                  ? "#facc15"
                   : currentLevel.glow === "orange"
-                    ? "rgb(251 146 60 / 0.1)"
-                    : "rgb(239 68 68 / 0.1)"
-            } 100%)`,
+                    ? "#fb923c"
+                    : "#ef4444"
+            } 0%, transparent 60%)`,
+            filter: "blur(60px)",
           }}
         />
 
-        {/* Pulsing rings when listening */}
-        {isListening && (
-          <>
-            <div
-              className="absolute w-80 h-80 rounded-full border opacity-20 animate-ping"
-              style={{
-                borderColor:
-                  currentLevel.glow === "cyan"
-                    ? "rgb(34 211 238)"
-                    : currentLevel.glow === "yellow"
-                      ? "rgb(250 204 21)"
-                      : currentLevel.glow === "orange"
-                        ? "rgb(251 146 60)"
-                        : "rgb(239 68 68)",
-                animationDuration: "2s",
-              }}
-            />
-            <div
-              className="absolute w-72 h-72 rounded-full border opacity-30 animate-ping"
-              style={{
-                borderColor:
-                  currentLevel.glow === "cyan"
-                    ? "rgb(34 211 238)"
-                    : currentLevel.glow === "yellow"
-                      ? "rgb(250 204 21)"
-                      : currentLevel.glow === "orange"
-                        ? "rgb(251 146 60)"
-                        : "rgb(239 68 68)",
-                animationDuration: "2.5s",
-                animationDelay: "0.5s",
-              }}
-            />
-          </>
-        )}
+        {/* Outer Ring Decorations */}
+        <div className="absolute inset-[-4px] rounded-full border border-white/5 pointer-events-none" />
+        <div className="absolute inset-[-12px] rounded-full border border-white/5 pointer-events-none opacity-50" />
 
-        {/* Main meter circle */}
-        <div className="relative w-64 h-64">
-          <div className="absolute inset-0 rounded-full bg-gradient-to-b from-card to-background border border-border" />
-          <div className="absolute inset-3 rounded-full bg-background/80 backdrop-blur-sm" />
-
+        {/* Main Gauge Container */}
+        <div className="relative w-80 h-80 rounded-full glass-panel flex items-center justify-center p-8 transition-transform duration-500 hover:scale-[1.02]">
+          {/* SVG Gauge */}
           <svg
             className="absolute inset-0 w-full h-full -rotate-90"
             viewBox="0 0 100 100"
           >
+            {/* Background Track */}
             <circle
               cx="50"
               cy="50"
-              r="45"
+              r="44"
               fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              className="text-border opacity-50"
+              stroke="rgba(255,255,255,0.03)"
+              strokeWidth="4"
             />
-            {[...Array(12)].map((_, i) => (
+
+            {/* Tick Marks */}
+            {[...Array(48)].map((_, i) => (
               <line
                 key={i}
                 x1="50"
-                y1="8"
+                y1="6"
                 x2="50"
-                y2="12"
-                stroke="currentColor"
-                strokeWidth="1"
-                className="text-muted-foreground/50"
-                transform={`rotate(${i * 30} 50 50)`}
+                y2={i % 4 === 0 ? "11" : "9"}
+                stroke={
+                  i % 4 === 0
+                    ? "rgba(255,255,255,0.2)"
+                    : "rgba(255,255,255,0.1)"
+                }
+                strokeWidth={i % 4 === 0 ? "0.8" : "0.4"}
+                transform={`rotate(${i * 7.5} 50 50)`}
               />
             ))}
+
+            {/* Active Progress Ring */}
             <circle
               cx="50"
               cy="50"
-              r="45"
+              r="44"
               fill="none"
-              strokeWidth="4"
+              stroke="currentColor"
+              strokeWidth="3.5"
               strokeLinecap="round"
-              strokeDasharray={`${(displayPercent / 100) * 283} 283`}
-              className={`${currentLevel.ring} transition-all duration-300`}
-              style={{
-                filter: isListening ? glowColors[currentLevel.glow] : "none",
-              }}
+              strokeDasharray={`${(displayPercent / 100) * 276} 276`}
+              className={`transition-all duration-500 ease-out ${currentLevel.color}`}
             />
           </svg>
 
-          <div className="absolute inset-0 flex flex-col items-center justify-center">
-            <span
-              className={`text-6xl font-mono font-bold tracking-tighter transition-colors duration-300 ${currentLevel.color}`}
-              style={{
-                textShadow: isListening ? `0 0 30px currentColor` : "none",
-              }}
-            >
-              {isListening ? decibels : "--"}
+          {/* Internal Display */}
+          <div className="relative flex flex-col items-center justify-center z-10 text-center">
+            <span className="text-slate-500 text-[10px] font-bold tracking-[0.3em] uppercase mb-1">
+              Decibels
             </span>
-            <span className="text-muted-foreground text-sm font-medium tracking-widest uppercase mt-1">
-              decibels
-            </span>
-            <p
-              className={`text-sm font-semibold mt-3 px-4 text-center transition-all duration-300 ${displayLevel.color}`}
+            <div className="relative">
+              <span
+                className={`text-8xl font-mono font-bold transition-all duration-300 tabular-nums ${
+                  isListening ? "text-white" : "text-slate-700"
+                }`}
+                style={{
+                  textShadow: isListening
+                    ? "0 0 40px rgba(255,255,255,0.2)"
+                    : "none",
+                }}
+              >
+                {isListening ? decibels.toString().padStart(2, "0") : "--"}
+              </span>
+            </div>
+            <div
+              className={`mt-4 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest transition-all duration-500 ${
+                isListening
+                  ? `${currentLevel.color} bg-black/40 border border-white/5`
+                  : "text-slate-600"
+              }`}
             >
-              {isListening ? displayLevel.label : "Ready to listen"}
-            </p>
+              {isListening ? displayLevel.label : "Device Ready"}
+            </div>
           </div>
         </div>
+      </div>
 
-        {/* Button */}
+      {/* Control Button */}
+      <div className="mt-12 w-full max-w-sm px-6">
         <Button
           onClick={isListening ? onStop : onStart}
-          size="lg"
-          className={`mt-8 w-full max-w-xs h-14 text-base font-semibold rounded-full transition-all duration-300 ${
+          className={`w-full group rounded-2xl h-16 text-sm font-bold uppercase tracking-[.2em] transition-all duration-500 overflow-hidden relative ${
             isListening
-              ? "bg-red-500/20 hover:bg-red-500/30 text-red-400 border border-red-500/50"
-              : "bg-primary/20 hover:bg-primary/30 text-primary border border-primary/50"
+              ? "bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/30"
+              : "bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-400 border border-cyan-500/30"
           }`}
-          style={{
-            boxShadow: isListening
-              ? "0 0 30px rgb(239 68 68 / 0.3)"
-              : "0 0 30px rgb(34 211 238 / 0.2)",
-          }}
         >
-          {isListening ? (
-            <>
-              <MicOff className="w-5 h-5 mr-2" />
-              Stop Listening
-            </>
-          ) : (
-            <>
-              <Mic className="w-5 h-5 mr-2" />
-              Start Listening
-            </>
-          )}
-        </Button>
+          {/* Button Shine Effect */}
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
 
-        {/* Legend */}
+          <div className="relative z-10 flex items-center justify-center gap-3">
+            {isListening ? (
+              <>
+                <MicOff className="w-5 h-5 animate-pulse" />
+                <span>Stop Listening</span>
+              </>
+            ) : (
+              <>
+                <Mic className="w-5 h-5" />
+                <span>Start Listening</span>
+              </>
+            )}
+          </div>
+        </Button>
+      </div>
+
+      {/* Footer Legend */}
+      <div className="mt-8">
         <Legend />
       </div>
     </div>

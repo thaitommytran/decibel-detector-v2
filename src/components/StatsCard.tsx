@@ -12,20 +12,30 @@ export function StatsCard({
   label,
   value,
   unit,
-  color = "text-foreground",
+  color = "text-white",
   action,
 }: StatsCardProps) {
   return (
-    <div className="bg-background/50 rounded-xl p-4 border border-border/50">
-      <div className="flex items-center justify-between mb-2">
-        <span className="text-xs text-muted-foreground uppercase tracking-wider">
+    <div className="glass-card rounded-2xl p-4 transition-all hover:bg-white/5 group border border-white/[0.03]">
+      <div className="flex items-center justify-between mb-3">
+        <span className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em]">
           {label}
         </span>
-        {action}
+        <div className="opacity-0 group-hover:opacity-100 transition-opacity">
+          {action}
+        </div>
       </div>
       <div className="flex items-baseline gap-2">
-        <span className={`text-3xl font-mono font-bold ${color}`}>{value}</span>
-        {unit && <span className="text-sm text-muted-foreground">{unit}</span>}
+        <span
+          className={`text-3xl font-mono font-bold tabular-nums tracking-tight ${color}`}
+        >
+          {value}
+        </span>
+        {unit && (
+          <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">
+            {unit}
+          </span>
+        )}
       </div>
     </div>
   );
