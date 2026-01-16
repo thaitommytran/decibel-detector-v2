@@ -1,4 +1,4 @@
-import { RotateCcw } from "lucide-react";
+import { RotateCcw, BarChart3, Info } from "lucide-react";
 import { StatsCard } from "./StatsCard";
 
 interface NoiseLevel {
@@ -29,24 +29,28 @@ export function SessionStats({
   formatTime,
 }: SessionStatsProps) {
   return (
-    <div className="bg-card/50 backdrop-blur-sm rounded-2xl border border-border p-5 h-full">
-      <h3 className="text-sm font-semibold text-foreground mb-4">
-        Session Statistics
-      </h3>
+    <div className="glass-panel rounded-[2rem] p-6 h-full flex flex-col gap-6">
+      <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-cyan-500/5 border border-cyan-500/10 w-fit">
+        <BarChart3 className="w-4 h-4 text-cyan-400" />
+        <h3 className="text-[10px] font-bold text-cyan-400/80 uppercase tracking-[0.2em]">
+          Session Analysis
+        </h3>
+      </div>
 
-      <div className="space-y-4">
+      <div className="flex flex-col gap-4">
         {/* Peak */}
         <StatsCard
-          label="Peak Level"
+          label="Peak Observed"
           value={isListening ? peakDecibels : "--"}
           unit="dB"
-          color={peakLevel.color}
+          color={isListening ? peakLevel.color : "text-slate-700"}
           action={
             <button
               onClick={onResetPeak}
-              className="p-1 rounded hover:bg-muted transition-colors text-muted-foreground hover:text-foreground"
+              className="p-1.5 rounded-lg bg-black/20 hover:bg-black/40 border border-white/5 transition-all text-slate-400 hover:text-white"
+              title="Reset Peak"
             >
-              <RotateCcw className="w-3 h-3" />
+              <RotateCcw className="w-3.5 h-3.5" />
             </button>
           }
         />
@@ -56,40 +60,51 @@ export function SessionStats({
           label="Average Level"
           value={isListening ? avgDecibels : "--"}
           unit="dB"
+          color={isListening ? "text-cyan-400" : "text-slate-700"}
         />
 
         {/* Session time */}
         <StatsCard
-          label="Session Duration"
+          label="Active Session"
           value={isListening ? formatTime(sessionTime) : "--:--"}
+          color={isListening ? "text-white" : "text-slate-700"}
         />
+      </div>
 
-        {/* Reference guide */}
-        <div className="bg-background/50 rounded-xl p-4 border border-border/50">
-          <span className="text-xs text-muted-foreground uppercase tracking-wider mb-3 block">
-            Reference Guide
-          </span>
-          <div className="space-y-2 text-xs">
-            <div className="flex justify-between">
-              <span className="text-muted-foreground">Whisper</span>
-              <span className="text-cyan-400 font-mono">30 dB</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-muted-foreground">Normal Talk</span>
-              <span className="text-cyan-400 font-mono">60 dB</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-muted-foreground">Vacuum</span>
-              <span className="text-yellow-400 font-mono">70 dB</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-muted-foreground">Loud Music</span>
-              <span className="text-orange-400 font-mono">85 dB</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-muted-foreground">Concerts</span>
-              <span className="text-red-500 font-mono">110 dB</span>
-            </div>
+      {/* Reference guide */}
+      <div className="mt-auto">
+        <div className="glass-card rounded-2xl p-5 border border-white/[0.02]">
+          <div className="flex items-center gap-2 mb-4">
+            <Info className="w-3.5 h-3.5 text-slate-500" />
+            <span className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em]">
+              Reference Guide
+            </span>
+          </div>
+          <div className="space-y-3">
+            {[
+              { label: "Whisper", db: 30, color: "text-cyan-400" },
+              { label: "Conversation", db: 60, color: "text-cyan-400" },
+              { label: "Vacuum", db: 70, color: "text-yellow-400" },
+              { label: "Heavy Traffic", db: 85, color: "text-orange-400" },
+              { label: "Concert", db: 110, color: "text-red-500" },
+            ].map((item) => (
+              <div
+                key={item.label}
+                className="flex justify-between items-center group"
+              >
+                <span className="text-[10px] text-slate-400 group-hover:text-slate-300 transition-colors">
+                  {item.label}
+                </span>
+                <div className="flex items-center gap-2">
+                  <div className="w-12 h-[1px] bg-white/5" />
+                  <span
+                    className={`text-[10px] font-mono font-bold ${item.color}`}
+                  >
+                    {item.db} dB
+                  </span>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </div>
