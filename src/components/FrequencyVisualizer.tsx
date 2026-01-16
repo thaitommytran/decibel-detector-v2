@@ -80,28 +80,43 @@ export function FrequencyVisualizer({
 
       {/* Signal pattern footer */}
       <div className="glass-card rounded-2xl p-4 mt-auto">
-        <div className="flex items-center justify-between mb-3">
+        <div className="flex items-center justify-between mb-4">
           <div className="text-[10px] font-bold text-slate-500 uppercase tracking-widest flex items-center gap-2">
             <Zap className="w-3 h-3 text-cyan-400" />
             Signal Pattern
           </div>
           <div
-            className={`w-2 h-2 rounded-full ${isListening ? "bg-cyan-400 animate-pulse glow-cyan" : "bg-slate-800"}`}
+            className={`w-1.5 h-1.5 rounded-full transition-all duration-500 ${
+              isListening
+                ? "bg-cyan-400 animate-pulse glow-cyan"
+                : "bg-slate-800"
+            }`}
           />
         </div>
-        <div className="flex items-end gap-1 h-10">
+        <div className="flex items-center gap-1 h-12">
           {Array.from({ length: 32 }).map((_, i) => {
             const historyIndex = Math.floor((i / 32) * dbHistory.length);
             const value = dbHistory[historyIndex] || 0;
+            const heightPercent = Math.max(8, (value / 120) * 100);
+
             return (
               <div
                 key={i}
-                className="flex-1 bg-gradient-to-t from-cyan-500/20 to-cyan-400 rounded-full transition-all duration-300"
-                style={{
-                  height: `${Math.max(10, (value / 120) * 100)}%`,
-                  opacity: isListening ? 0.3 + (value / 120) * 0.7 : 0.1,
-                }}
-              />
+                className="flex-1 relative group"
+                style={{ height: "100%" }}
+              >
+                <div
+                  className={`absolute left-0 right-0 top-1/2 -translate-y-1/2 rounded-full transition-all duration-300 ${
+                    isListening
+                      ? "bg-cyan-400 shadow-[0_0_8px_rgba(34,211,238,0.3)]"
+                      : "bg-slate-700/50"
+                  }`}
+                  style={{
+                    height: `${heightPercent}%`,
+                    opacity: isListening ? 0.4 + (value / 120) * 0.6 : 0.2,
+                  }}
+                />
+              </div>
             );
           })}
         </div>
