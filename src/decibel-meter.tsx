@@ -231,6 +231,18 @@ export function DecibelMeter() {
     setPeakDecibels(0);
   }, []);
 
+  const clearSession = useCallback(() => {
+    setDecibels(0);
+    setPeakDecibels(0);
+    setAvgDecibels(0);
+    setSessionTime(0);
+    setDbHistory(new Array(HISTORY_LENGTH).fill(0));
+    setFrequencyBars(new Array(32).fill(0));
+    setStableLabel(null);
+    allSamplesRef.current = [];
+    samplesRef.current = [];
+  }, []);
+
   const formatTime = (seconds: number) => {
     const m = Math.floor(seconds / 60);
     const s = seconds % 60;
@@ -272,6 +284,8 @@ export function DecibelMeter() {
             displayPercent={displayPercent}
             onStart={startListening}
             onStop={stopListening}
+            onClearSession={clearSession}
+            onSignIn={() => console.log("Sign in clicked")}
           />
         </div>
 

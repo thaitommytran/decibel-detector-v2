@@ -16,7 +16,7 @@ export function StatsCard({
   action,
 }: StatsCardProps) {
   return (
-    <div className="glass-card rounded-2xl p-4 transition-all hover:bg-white/5 group border border-white/[0.03]">
+    <div className="glass-card rounded-xl p-4 transition-all hover:bg-white/5 group border border-white/[0.03]">
       <div className="flex items-center justify-between mb-3">
         <span className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em]">
           {label}

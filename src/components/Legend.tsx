@@ -23,7 +23,7 @@ export function Legend() {
   ];
 
   return (
-    <div className="flex flex-wrap items-center justify-center gap-6 px-6 py-3 rounded-2xl glass-card border border-white/[0.02]">
+    <div className="flex flex-wrap items-center justify-center gap-6 px-6 py-3 rounded-xl glass-card border border-white/[0.02]">
       {legendItems.map((item) => (
         <div
           key={item.label}
