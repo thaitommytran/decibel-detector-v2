@@ -127,7 +127,7 @@ export function MainMeter({
             <div className="relative">
               <span
                 className={`text-8xl font-mono font-bold transition-all duration-300 tabular-nums ${
-                  isListening ? "text-white" : "text-slate-700"
+                  isListening ? "text-white" : "text-slate-500"
                 }`}
                 style={{
                   textShadow: isListening
@@ -135,17 +135,21 @@ export function MainMeter({
                     : "none",
                 }}
               >
-                {isListening ? decibels.toString().padStart(2, "0") : "--"}
+                {decibels > 0 || isListening
+                  ? decibels.toString().padStart(2, "0")
+                  : "--"}
               </span>
             </div>
             <div
               className={`mt-4 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest transition-all duration-500 ${
                 isListening
                   ? `${currentLevel.color} bg-black/40 border border-white/5`
-                  : "text-slate-600"
+                  : "text-slate-600 bg-slate-900/40 border border-white/5"
               }`}
             >
-              {isListening ? displayLevel.label : "Device Ready"}
+              {decibels > 0 || isListening
+                ? displayLevel.label
+                : "Device Ready"}
             </div>
           </div>
         </div>

@@ -54,7 +54,7 @@ export function FrequencyVisualizer({
             Min Level
           </div>
           <div className="text-2xl font-mono font-bold text-white leading-none">
-            {isListening
+            {dbHistory.some((d) => d > 0)
               ? `${Math.round(Math.min(...dbHistory.filter((d) => d > 0))) || 0}`
               : "--"}
             <span className="text-[10px] text-slate-500 ml-1 font-sans uppercase">
@@ -68,7 +68,9 @@ export function FrequencyVisualizer({
             Max Level
           </div>
           <div className="text-2xl font-mono font-bold text-white leading-none">
-            {isListening ? `${Math.round(Math.max(...dbHistory))}` : "--"}
+            {dbHistory.some((d) => d > 0)
+              ? `${Math.round(Math.max(...dbHistory))}`
+              : "--"}
             <span className="text-[10px] text-slate-500 ml-1 font-sans uppercase">
               dB
             </span>

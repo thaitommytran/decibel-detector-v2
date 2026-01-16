@@ -41,9 +41,9 @@ export function SessionStats({
         {/* Peak */}
         <StatsCard
           label="Peak Observed"
-          value={isListening ? peakDecibels : "--"}
+          value={peakDecibels > 0 || isListening ? peakDecibels : "--"}
           unit="dB"
-          color={isListening ? peakLevel.color : "text-slate-700"}
+          color={isListening ? peakLevel.color : "text-slate-500"}
           action={
             <button
               onClick={onResetPeak}
@@ -58,16 +58,18 @@ export function SessionStats({
         {/* Average */}
         <StatsCard
           label="Average Level"
-          value={isListening ? avgDecibels : "--"}
+          value={avgDecibels > 0 || isListening ? avgDecibels : "--"}
           unit="dB"
-          color={isListening ? "text-cyan-400" : "text-slate-700"}
+          color={isListening ? "text-cyan-400" : "text-slate-500"}
         />
 
         {/* Session time */}
         <StatsCard
           label="Active Session"
-          value={isListening ? formatTime(sessionTime) : "--:--"}
-          color={isListening ? "text-white" : "text-slate-700"}
+          value={
+            sessionTime > 0 || isListening ? formatTime(sessionTime) : "--:--"
+          }
+          color={isListening ? "text-white" : "text-slate-500"}
         />
       </div>
 

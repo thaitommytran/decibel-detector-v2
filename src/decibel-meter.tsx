@@ -123,6 +123,8 @@ export function DecibelMeter() {
       source.connect(analyser);
 
       setIsListening(true);
+      setStableLabel(null);
+      setFrequencyBars(new Array(32).fill(0));
       samplesRef.current = [];
       allSamplesRef.current = [];
       sessionStartRef.current = Date.now();
@@ -223,9 +225,6 @@ export function DecibelMeter() {
       audioContextRef.current.close();
     }
     setIsListening(false);
-    setStableLabel(null);
-    setFrequencyBars(new Array(32).fill(0));
-    samplesRef.current = [];
   }, []);
 
   const resetPeak = useCallback(() => {
