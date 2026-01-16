@@ -5,3 +5,4 @@ export { Legend } from "./Legend";
 export { MainMeter } from "./MainMeter";
 export { SessionStats } from "./SessionStats";
 export { StatsCard } from "./StatsCard";
+export { DecibelMeter } from "./DecibelMeter";

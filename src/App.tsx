@@ -1,4 +1,4 @@
-import { DecibelMeter } from "./decibel-meter";
+import { DecibelMeter } from "@/components/DecibelMeter";
 
 function App() {
   return (

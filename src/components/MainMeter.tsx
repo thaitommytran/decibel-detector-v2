@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/Button";
 import { Mic, MicOff, Volume2 } from "lucide-react";
 import { Legend } from "./Legend";
 
