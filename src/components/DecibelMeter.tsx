@@ -5,65 +5,15 @@ import { FrequencyVisualizer } from "@/components/FrequencyVisualizer";
 import { MainMeter } from "@/components/MainMeter";
 import { SessionStats } from "@/components/SessionStats";
 import { MicOff } from "lucide-react";
-
-const NOISE_LEVELS = [
-  {
-    max: 40,
-    label: "Whisper quiet",
-    color: "text-cyan-400",
-    ring: "stroke-cyan-400",
-    glow: "cyan",
-  },
-  {
-    max: 55,
-    label: "Nice and peaceful",
-    color: "text-cyan-400",
-    ring: "stroke-cyan-400",
-    glow: "cyan",
-  },
-  {
-    max: 65,
-    label: "Normal conversation",
-    color: "text-yellow-400",
-    ring: "stroke-yellow-400",
-    glow: "yellow",
-  },
-  {
-    max: 75,
-    label: "Getting louder...",
-    color: "text-orange-400",
-    ring: "stroke-orange-400",
-    glow: "orange",
-  },
-  {
-    max: 85,
-    label: "Pretty loud!",
-    color: "text-orange-500",
-    ring: "stroke-orange-500",
-    glow: "orange",
-  },
-  {
-    max: 95,
-    label: "Very loud!",
-    color: "text-red-500",
-    ring: "stroke-red-500",
-    glow: "red",
-  },
-  {
-    max: 105,
-    label: "Dangerously loud",
-    color: "text-red-600",
-    ring: "stroke-red-600",
-    glow: "red",
-  },
-  {
-    max: Number.POSITIVE_INFINITY,
-    label: "Hearing damage risk",
-    color: "text-red-700",
-    ring: "stroke-red-700",
-    glow: "red",
-  },
-];
+import {
+  NOISE_LEVELS,
+  SMOOTHING_SAMPLES,
+  UPDATE_INTERVAL_MS,
+  LABEL_STABILITY_MS,
+  HISTORY_LENGTH,
+  FREQUENCY_BARS_COUNT,
+  MAX_DB,
+} from "@/constants";
 
 function getNoiseLevel(db: number) {
   return (
@@ -71,11 +21,6 @@ function getNoiseLevel(db: number) {
     NOISE_LEVELS[NOISE_LEVELS.length - 1]
   );
 }
-
-const SMOOTHING_SAMPLES = 15;
-const UPDATE_INTERVAL_MS = 100;
-const LABEL_STABILITY_MS = 500;
-const HISTORY_LENGTH = 60;
 
 export function DecibelMeter() {
   const [isListening, setIsListening] = useState(false);
@@ -86,10 +31,10 @@ export function DecibelMeter() {
     (typeof NOISE_LEVELS)[0] | null
   >(null);
   const [frequencyBars, setFrequencyBars] = useState<number[]>(
-    new Array(32).fill(0)
+    new Array(FREQUENCY_BARS_COUNT).fill(0),
   );
   const [dbHistory, setDbHistory] = useState<number[]>(
-    new Array(HISTORY_LENGTH).fill(0)
+    new Array(HISTORY_LENGTH).fill(0),
   );
   const [sessionTime, setSessionTime] = useState(0);
   const [avgDecibels, setAvgDecibels] = useState(0);
@@ -124,7 +69,7 @@ export function DecibelMeter() {
 
       setIsListening(true);
       setStableLabel(null);
-      setFrequencyBars(new Array(32).fill(0));
+      setFrequencyBars(new Array(FREQUENCY_BARS_COUNT).fill(0));
       samplesRef.current = [];
       allSamplesRef.current = [];
       sessionStartRef.current = Date.now();
@@ -144,7 +89,7 @@ export function DecibelMeter() {
         }
         const rms = Math.sqrt(sumSquares / dataArray.length);
         const db = rms > 0 ? Math.round(20 * Math.log10(rms) + 94) : 0;
-        const clampedDb = Math.max(0, Math.min(120, db));
+        const clampedDb = Math.max(0, Math.min(MAX_DB, db));
 
         samplesRef.current.push(clampedDb);
         if (samplesRef.current.length > SMOOTHING_SAMPLES) {
@@ -152,7 +97,7 @@ export function DecibelMeter() {
         }
 
         const bars: number[] = [];
-        const barsCount = 32;
+        const barsCount = FREQUENCY_BARS_COUNT;
         const step = Math.floor(freqDataArray.length / barsCount);
         for (let i = 0; i < barsCount; i++) {
           let sum = 0;
@@ -168,7 +113,7 @@ export function DecibelMeter() {
 
           const smoothedDb = Math.round(
             samplesRef.current.reduce((a, b) => a + b, 0) /
-              samplesRef.current.length
+              samplesRef.current.length,
           );
 
           setDecibels(smoothedDb);
@@ -179,11 +124,11 @@ export function DecibelMeter() {
           setAvgDecibels(
             Math.round(
               allSamplesRef.current.reduce((a, b) => a + b, 0) /
-                allSamplesRef.current.length
-            )
+                allSamplesRef.current.length,
+            ),
           );
           setSessionTime(
-            Math.floor((Date.now() - sessionStartRef.current) / 1000)
+            Math.floor((Date.now() - sessionStartRef.current) / 1000),
           );
 
           const newLevel = getNoiseLevel(smoothedDb);
@@ -206,7 +151,7 @@ export function DecibelMeter() {
       updateDecibels(0);
     } catch {
       setError(
-        "Microphone access denied. Please allow microphone access to use this app."
+        "Microphone access denied. Please allow microphone access to use this app.",
       );
     }
   }, []);
@@ -237,7 +182,7 @@ export function DecibelMeter() {
     setAvgDecibels(0);
     setSessionTime(0);
     setDbHistory(new Array(HISTORY_LENGTH).fill(0));
-    setFrequencyBars(new Array(32).fill(0));
+    setFrequencyBars(new Array(FREQUENCY_BARS_COUNT).fill(0));
     setStableLabel(null);
     allSamplesRef.current = [];
     samplesRef.current = [];
@@ -259,7 +204,7 @@ export function DecibelMeter() {
   const displayLevel = stableLabel || currentLevel;
   const peakLevel = getNoiseLevel(peakDecibels);
 
-  const displayPercent = Math.min(100, (decibels / 120) * 100);
+  const displayPercent = Math.min(100, (decibels / MAX_DB) * 100);
 
   return (
     <div className="w-full max-w-7xl mx-auto px-6">

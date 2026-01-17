@@ -1,30 +1,9 @@
-export function Legend() {
-  const legendItems = [
-    {
-      color: "bg-cyan-400",
-      label: "Quiet",
-      glow: "shadow-[0_0_8px_rgba(34,211,238,0.4)]",
-    },
-    {
-      color: "bg-yellow-400",
-      label: "Normal",
-      glow: "shadow-[0_0_8px_rgba(250,204,21,0.4)]",
-    },
-    {
-      color: "bg-orange-400",
-      label: "Loud",
-      glow: "shadow-[0_0_8px_rgba(251,146,60,0.4)]",
-    },
-    {
-      color: "bg-red-500",
-      label: "Danger",
-      glow: "shadow-[0_0_8px_rgba(239,68,68,0.4)]",
-    },
-  ];
+import { LEGEND_ITEMS } from "@/constants";
 
+export function Legend() {
   return (
     <div className="flex flex-wrap items-center justify-center gap-6 px-6 py-3 rounded-xl glass-card border border-white/[0.02]">
-      {legendItems.map((item) => (
+      {LEGEND_ITEMS.map((item) => (
         <div
           key={item.label}
           className="flex items-center gap-2 group transition-all cursor-default"

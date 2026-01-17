@@ -1,14 +1,7 @@
-import { Button } from "@/components/ui/Button";
+import { Button } from "@/components/ui/button";
 import { Mic, MicOff, Volume2 } from "lucide-react";
 import { Legend } from "./Legend";
-
-interface NoiseLevel {
-  max: number;
-  label: string;
-  color: string;
-  ring: string;
-  glow: string;
-}
+import type { NoiseLevel } from "@/constants";
 
 interface MainMeterProps {
   isListening: boolean;

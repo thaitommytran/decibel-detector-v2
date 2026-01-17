@@ -1,13 +1,8 @@
 import { RotateCcw, BarChart3, Info } from "lucide-react";
 import { StatsCard } from "./StatsCard";
 
-interface NoiseLevel {
-  max: number;
-  label: string;
-  color: string;
-  ring: string;
-  glow: string;
-}
+import { REFERENCE_GUIDE } from "@/constants";
+import type { NoiseLevel } from "@/constants";
 
 interface SessionStatsProps {
   isListening: boolean;
@@ -85,13 +80,7 @@ export function SessionStats({
             </span>
           </div>
           <div className="space-y-3">
-            {[
-              { label: "Whisper", db: 30, color: "text-cyan-400" },
-              { label: "Conversation", db: 60, color: "text-cyan-400" },
-              { label: "Vacuum", db: 70, color: "text-yellow-400" },
-              { label: "Heavy Traffic", db: 85, color: "text-orange-400" },
-              { label: "Concert", db: 110, color: "text-red-500" },
-            ].map((item) => (
+            {REFERENCE_GUIDE.map((item) => (
               <div
                 key={item.label}
                 className="flex justify-between items-center group"

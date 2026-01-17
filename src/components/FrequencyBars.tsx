@@ -3,13 +3,15 @@ interface FrequencyBarsProps {
   isListening: boolean;
 }
 
+import { FREQUENCY_BARS_COUNT } from "@/constants";
+
 export function FrequencyBars({
   frequencyBars,
   isListening,
 }: FrequencyBarsProps) {
   const getBarColor = (index: number) => {
     if (!isListening) return "bg-slate-800";
-    const intensity = index / 32;
+    const intensity = index / FREQUENCY_BARS_COUNT;
     if (intensity < 0.3) return "bg-cyan-400";
     if (intensity < 0.6) return "bg-yellow-400";
     if (intensity < 0.8) return "bg-orange-400";

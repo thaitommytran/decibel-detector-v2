@@ -1,6 +1,7 @@
 import { Activity, Zap, TrendingUp } from "lucide-react";
 import { FrequencyBars } from "./FrequencyBars";
 import { HistoryGraph } from "./HistoryGraph";
+import { FREQUENCY_BARS_COUNT } from "@/constants";
 
 interface FrequencyVisualizerProps {
   frequencyBars: number[];
@@ -94,8 +95,10 @@ export function FrequencyVisualizer({
           />
         </div>
         <div className="flex items-center gap-1 h-12">
-          {Array.from({ length: 32 }).map((_, i) => {
-            const historyIndex = Math.floor((i / 32) * dbHistory.length);
+          {Array.from({ length: FREQUENCY_BARS_COUNT }).map((_, i) => {
+            const historyIndex = Math.floor(
+              (i / FREQUENCY_BARS_COUNT) * dbHistory.length,
+            );
             const value = dbHistory[historyIndex] || 0;
             const heightPercent = Math.max(8, (value / 120) * 100);
 

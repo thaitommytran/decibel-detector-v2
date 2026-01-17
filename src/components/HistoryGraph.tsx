@@ -3,13 +3,15 @@ interface HistoryGraphProps {
   historyLength: number;
 }
 
+import { MAX_DB } from "@/constants";
+
 export function HistoryGraph({ dbHistory, historyLength }: HistoryGraphProps) {
   return (
     <div className="relative h-24 overflow-hidden">
       <svg
         className="w-full h-full"
         preserveAspectRatio="none"
-        viewBox={`0 0 ${historyLength} 120`}
+        viewBox={`0 0 ${historyLength} ${MAX_DB}`}
       >
         <defs>
           <linearGradient id="historyGradient" x1="0" y1="0" x2="0" y2="1">
@@ -30,9 +32,9 @@ export function HistoryGraph({ dbHistory, historyLength }: HistoryGraphProps) {
           <line
             key={y}
             x1="0"
-            y1={120 - y}
+            y1={MAX_DB - y}
             x2={historyLength}
-            y2={120 - y}
+            y2={MAX_DB - y}
             stroke="rgba(255,255,255,0.03)"
             strokeWidth="1"
           />
@@ -40,14 +42,14 @@ export function HistoryGraph({ dbHistory, historyLength }: HistoryGraphProps) {
 
         {/* Area fill */}
         <path
-          d={`M 0 120 ${dbHistory.map((db, i) => `L ${i} ${120 - db}`).join(" ")} L ${historyLength - 1} 120 Z`}
+          d={`M 0 ${MAX_DB} ${dbHistory.map((db, i) => `L ${i} ${MAX_DB - db}`).join(" ")} L ${historyLength - 1} ${MAX_DB} Z`}
           fill="url(#historyGradient)"
           className="transition-all duration-300"
         />
 
         {/* Main Line with Glow */}
         <path
-          d={`M 0 ${120 - dbHistory[0]} ${dbHistory.map((db, i) => `L ${i} ${120 - db}`).join(" ")}`}
+          d={`M 0 ${MAX_DB - dbHistory[0]} ${dbHistory.map((db, i) => `L ${i} ${MAX_DB - db}`).join(" ")}`}
           fill="none"
           stroke="rgb(34, 211, 238)"
           strokeWidth="1.5"
