@@ -12,6 +12,20 @@ A real-time audio analysis application built with React, TypeScript, and Tailwin
 - 🔔 **Noise Level Indicators** - Color-coded warnings from quiet to dangerous levels
 - ⚡ **Smooth Animations** - Pulsing rings and glow effects based on sound intensity
 
+## 📸 Screenshots
+
+### Main Dashboard
+
+![Main Dashboard](./src/assets/decibel-detector-v2-ref-image-2.png)
+
+### User Authentication
+
+![Login Page](./src/assets/decibel-detector-v2-ref-login.png)
+
+### Session History & Analysis
+
+![Session History](./src/assets/decibel-detector-v2-ref-history.png)
+
 ## 🚀 Getting Started
 
 ### Prerequisites
