@@ -1,18 +1,36 @@
-import { DecibelMeter } from "@/components/DecibelMeter";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { AuthProvider } from "@/contexts/AuthContext";
+import { Layout } from "@/layouts/Layout";
+import { LoginPage } from "@/pages/LoginPage";
+import { DetectorPage } from "@/pages/DetectorPage";
+import { DashboardPage } from "@/pages/DashboardPage";
 
 function App() {
   return (
-    <div className="min-h-screen bg-[#020617] text-slate-200 selection:bg-cyan-500/30">
-      {/* Background Decorations */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-cyan-500/5 blur-[120px]" />
-        <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-blue-500/5 blur-[120px]" />
-      </div>
-
-      <main className="relative z-10 container mx-auto py-12">
-        <DecibelMeter />
-      </main>
-    </div>
+    <AuthProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/login" element={<LoginPage />} />
+          <Route
+            path="/detector"
+            element={
+              <Layout>
+                <DetectorPage />
+              </Layout>
+            }
+          />
+          <Route
+            path="/dashboard"
+            element={
+              <Layout>
+                <DashboardPage />
+              </Layout>
+            }
+          />
+          <Route path="/" element={<Navigate to="/login" replace />} />
+        </Routes>
+      </BrowserRouter>
+    </AuthProvider>
   );
 }
 

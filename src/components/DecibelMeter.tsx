@@ -1,6 +1,5 @@
-"use client";
-
 import { useState, useRef, useCallback, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { FrequencyVisualizer } from "@/components/FrequencyVisualizer";
 import { MainMeter } from "@/components/MainMeter";
 import { SessionStats } from "@/components/SessionStats";
@@ -23,6 +22,7 @@ function getNoiseLevel(db: number) {
 }
 
 export function DecibelMeter() {
+  const navigate = useNavigate();
   const [isListening, setIsListening] = useState(false);
   const [decibels, setDecibels] = useState(0);
   const [peakDecibels, setPeakDecibels] = useState(0);
@@ -230,7 +230,7 @@ export function DecibelMeter() {
             onStart={startListening}
             onStop={stopListening}
             onClearSession={clearSession}
-            onSignIn={() => console.log("Sign in clicked")}
+            onSignIn={() => navigate("/login")}
           />
         </div>
 
